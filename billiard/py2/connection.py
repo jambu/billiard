@@ -27,7 +27,7 @@ from .._ext import _billiard, win32
 from ..compat import get_errno, setblocking, bytes as cbytes
 from ..five import monotonic
 from ..forking import duplicate, close
-from ..reduction import ForkingPickler
+from ..reduction import ForkingPickler, reduce_socket, reduce_connection
 from ..util import get_temp_dir, Finalize, sub_debug, debug
 
 try:
@@ -491,9 +491,10 @@ def XmlClient(*args, **kwds):
 
 
 if sys.platform == 'win32':
-    ForkingPickler.register(socket.socket, reduction.reduce_socket)
-    ForkingPickler.register(Connection, reduction.reduce_connection)
-    ForkingPickler.register(PipeConnection, reduction.reduce_pipe_connection)
+    from ..reduction import reduce_pipe_connection
+    ForkingPickler.register(socket.socket, reduce_socket)
+    ForkingPickler.register(Connection, reduce_connection)
+    ForkingPickler.register(PipeConnection, reduce_pipe_connection)
 else:
-    ForkingPickler.register(socket.socket, reduction.reduce_socket)
-    ForkingPickler.register(Connection, reduction.reduce_connection)
+    ForkingPickler.register(socket.socket, reduce_socket)
+    ForkingPickler.register(Connection, reduce_connection)
