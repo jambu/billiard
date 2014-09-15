@@ -53,7 +53,8 @@ from threading import Event
 
 from billiard.five import Queue
 
-from billiard.connection import Pipe
+from billiard import connection
+from ..connection import Pipe
 
 
 class DummyProcess(threading.Thread):
